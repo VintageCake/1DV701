@@ -35,7 +35,7 @@ public class TCPEchoServer {
 		}
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + welcome.getLocalPort());
 		
-		// Main server loop
+		// Main server loop test
 		try  {
 			while (true) {
 				Thread t = new Thread(new TCPThread(new TCPClientSocket(welcome.accept()), bufSize, TIMEOUT_MS));
