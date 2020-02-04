@@ -19,6 +19,9 @@ public class TCPThread implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println(java.time.LocalTime.now() + " Incomming connection from "
+				+ sock.getDestination().getAddress().getHostAddress() + ":" + sock.getDestination().getPort()
+				+ " opened");
 		while (true) {
 			try {
 				sock.setTimeout(TIMEOUT_MS);
@@ -38,7 +41,7 @@ public class TCPThread implements Runnable {
 				boolean sendData = false;
 				byte[] data = null;
 				while (!sock.isClosed()) {
-					if (sendData) { 
+					if (sendData) {
 						sock.write(data);
 						sendData = false;
 					}
@@ -54,7 +57,9 @@ public class TCPThread implements Runnable {
 				break;
 			}
 			catch (SocketException e) {
-				System.err.println("Connection from " + sock.getDestination().getAddress() + ":" + sock.getDestination().getPort() + " closed, reason: " + "(" + e.getMessage() + ")");
+				System.out.println(java.time.LocalTime.now() + " Connection from "
+						+ sock.getDestination().getAddress().getHostAddress() + ":" + sock.getDestination().getPort()
+						+ " closed, reason: " + "(" + e.getMessage() + ")");
 				break;
 			}
 			catch (IOException e) {
@@ -64,8 +69,8 @@ public class TCPThread implements Runnable {
 			}
 		}
 		/*
-		 * Attempt to close socket when client has sent RST or FIN/ACK,
-		 * or when client has 'soft closed' the connection with no warning and timeout was triggered.
+		 * Attempt to close socket when client has sent RST or FIN/ACK, or when client
+		 * has 'soft closed' the connection with no warning and timeout was triggered.
 		 */
 		try {
 			sock.close();

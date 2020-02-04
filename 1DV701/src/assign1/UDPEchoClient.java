@@ -157,13 +157,6 @@ public class UDPEchoClient {
 			System.out.println("Malformed packets or timeouts: " + failures);
 			System.out.println("------");
 
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
 		}
 		while (!oneTime);
 	}

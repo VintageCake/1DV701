@@ -4,7 +4,7 @@ package assign1;
   Author: Love Samulesson ls223qx@student.lnu.se
   Date: 2020-02-01
   
-  A simple UDP server that sends back whatever is received by using the socket api.
+  A UDP server that sends back whatever is received by using the socket api.
   This program uses the abstract socket created for VG task 2.
   
 */
@@ -27,10 +27,7 @@ public class UDPEchoServer {
 
 		byte[] buf = null;
 		try {
-			int testBuffer = Integer.parseInt(args[0]);
-			if (testBuffer < 1 || testBuffer > 100000) {
-				throw new NumberFormatException("Invalid buffer size, please use range between 1-100,000");
-			}
+			int testBuffer = verifyBuffer(args[0]);
 			buf = new byte[testBuffer];
 		}
 		catch (NumberFormatException e1) {
@@ -44,13 +41,15 @@ public class UDPEchoServer {
 			serverSocket = new UDPServerSocket(MYPORT);
 		}
 		catch (SocketException e) {
-			System.err.println("Socket creation error, port likely already in use");
-			e.printStackTrace();
+			System.err.println("Socket creation error: " + e.getMessage());
 			System.exit(1);
 		}
 		
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
 		@SuppressWarnings("unused")
+		
+		
+		// Main server loop
 		int counter = 0;
 		while (true) {
 			try {
@@ -77,6 +76,14 @@ public class UDPEchoServer {
 				System.exit(1);
 			}
 		}
+	}
+	
+	private static int verifyBuffer(String buffer) {
+		int testBuffer = Integer.parseInt(buffer);
+		if (testBuffer < 1 || testBuffer > 100000) {
+			throw new NumberFormatException("Invalid buffer size, please use range between 1-100,000");
+		}
+		return testBuffer;
 	}
 
 }

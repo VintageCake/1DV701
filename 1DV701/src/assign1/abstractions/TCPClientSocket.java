@@ -39,6 +39,7 @@ public class TCPClientSocket extends AbstractSocket {
 	public void write(byte[] bytes) throws IOException {
 		out.write(bytes);
 	}
+	// Read until buffer empty or buffer length is hit, then return a byte with exact length as message received.
 	public byte[] read(int bufferLength) throws IOException {
 		byte[] temp = new byte[bufferLength];
 		int i = 0;

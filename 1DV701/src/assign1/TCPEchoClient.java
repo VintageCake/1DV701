@@ -12,7 +12,7 @@ public class TCPEchoClient {
 	public static final String MSG = "An Echo message!";
 	public static final int TIMEOUT_MS = 50; // Sets message timeout
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) {
 		if (args.length != 4) {
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
@@ -57,8 +57,8 @@ public class TCPEchoClient {
 			tcpSocket.setupIO();
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Socket creation failed: " + e.getMessage());
+			System.exit(1);
 		}
 		do {
 			long end = System.currentTimeMillis() + 1000;
@@ -69,8 +69,6 @@ public class TCPEchoClient {
 				String receivedMessage = "";
 				try {
 					tcpSocket.write(MSG.getBytes());
-					while (!tcpSocket.hasData())
-						;
 
 					while (receivedMessage.length() < MSG.length()) {
 						receivedMessage = receivedMessage.concat(new String(tcpSocket.read(buf)));
@@ -95,16 +93,15 @@ public class TCPEchoClient {
 			System.out.println("Malformed packets or timeouts: " + failures);
 			System.out.println("------");
 
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
 		}
 		while (!oneTime);
-		tcpSocket.close();
+		try {
+			tcpSocket.close();
+		}
+		catch (IOException e) {
+			System.err.println("Socket already closed: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 
 	private static TCPClientSocket createSocket(String ip, int destPort, int myPort) {
