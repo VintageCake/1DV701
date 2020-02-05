@@ -62,7 +62,7 @@ public class TCPEchoClient {
 		}
 		do {
 			long end = System.currentTimeMillis() + 1000;
-			int packetsShipped = 0;
+			int messagesShipped = 0;
 			int failures = 0;
 
 			do {
@@ -80,21 +80,22 @@ public class TCPEchoClient {
 					break;
 				}
 				if (receivedMessage.compareTo(MSG) == 0) {
-					packetsShipped++;
+					messagesShipped++;
 				}
 				else {
 					failures++;
 				}
 			}
-			while (!oneTime && System.currentTimeMillis() < end && packetsShipped < sendRate);
+			while (!oneTime && System.currentTimeMillis() < end && messagesShipped < sendRate);
 
 			System.out.println("------");
-			System.out.println("Successfully echoed " + packetsShipped + " out of " + sendRate + " messages");
+			System.out.println("Successfully echoed " + messagesShipped + " out of " + sendRate + " messages");
 			System.out.println("Malformed packets or timeouts: " + failures);
 			System.out.println("------");
 
 		}
 		while (!oneTime);
+		// When main loop is finished, try to close the socket.
 		try {
 			tcpSocket.close();
 		}
@@ -103,7 +104,11 @@ public class TCPEchoClient {
 			System.exit(1);
 		}
 	}
-
+	
+	/*
+	 * Initialise socket by calling creation methods for TCPClientSocket
+	 * Handles all errors by telling user about error, and then closing the program.
+	 */
 	private static TCPClientSocket createSocket(String ip, int destPort, int myPort) {
 		TCPClientSocket tcpSocket = null;
 		try {
@@ -123,8 +128,7 @@ public class TCPEchoClient {
 			System.exit(1);
 		}
 		catch (IOException e) {
-			System.err.println("General failure");
-			e.printStackTrace();
+			System.err.println("General failure: " + e.getMessage());
 			System.exit(1);
 		}
 

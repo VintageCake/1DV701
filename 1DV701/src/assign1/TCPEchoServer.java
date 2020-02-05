@@ -28,7 +28,7 @@ public class TCPEchoServer {
 		try {
 			welcome = new ServerSocket(MYPORT);
 		}
-		catch (IOException e1) {
+		catch (IOException e1) { // ServerSocket throws error basically either with no network adapter enabled or port already bound.
 			System.err.println("Server socket creation failed, port likely already in use");
 			System.err.println(e1.getMessage());
 			System.exit(1);
@@ -38,6 +38,8 @@ public class TCPEchoServer {
 		// Main server loop
 		try  {
 			while (true) {
+				// welcome.accept() is blocking, waits until new connection is opened.
+				// Tosses the newly created socket into a new thread, multithreads the clients.
 				Thread t = new Thread(new TCPThread(new TCPClientSocket(welcome.accept()), bufSize, TIMEOUT_MS));
 				t.start();
 			}
