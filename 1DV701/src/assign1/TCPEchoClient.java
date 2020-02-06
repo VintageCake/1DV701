@@ -94,9 +94,9 @@ public class TCPEchoClient {
 			System.out.println("Successfully echoed " + messagesShipped + " out of " + sendRate + " messages");
 			System.out.println("Malformed packets or timeouts: " + failures);
 			System.out.println("------");
-
 		}
 		while (!oneTime);
+
 		// When main loop is finished, try to close the socket.
 		try {
 			tcpSocket.close();
@@ -142,8 +142,8 @@ public class TCPEchoClient {
 		if (ipSplit.length < 4) {
 			throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 		}
-		for (int i = 0; i < ipSplit.length; i++) {
-			int test = Integer.parseInt(ipSplit[i]);
+		for (String s : ipSplit) {
+			int test = Integer.parseInt(s);
 			if (test > 255 || test < 0) {
 				throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 			}
