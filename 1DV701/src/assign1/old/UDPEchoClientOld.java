@@ -37,12 +37,12 @@ public class UDPEchoClientOld {
 			MSG = MSG.concat("A");
 		}
 		*/
-		
+
 		// Initialise variables for port number, buffer, send rate.
 		Integer portNumber = null;
 		byte[] buf = null;
 		Integer sendRate = null;
-		
+
 		// large try-catch block that validates and sanity checks all input arguments
 		try {
 			String ip = args[0];
@@ -50,8 +50,8 @@ public class UDPEchoClientOld {
 			if (ipSplit.length < 4) {
 				throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 			}
-			for (int i = 0; i < ipSplit.length; i++) {
-				int test = Integer.parseInt(ipSplit[i]);
+			for (String s : ipSplit) {
+				int test = Integer.parseInt(s);
 				if (test > 255 || test < 0) {
 					throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 				}
@@ -99,9 +99,8 @@ public class UDPEchoClientOld {
 			socket.bind(localBindPoint); // Can throw SocketException if port already bound
 			socket.setSoTimeout(TIMEOUT_MS); // Packet timeout timer configuration, socket.receive() throws on timeout.
 		}
-		catch (SocketException e1) {
-			e1.printStackTrace();
-			System.err.println("\nSocket binding failed");
+		catch (SocketException e) {
+			System.err.println("Socket binding failed: " + e.getMessage());
 			System.exit(1);
 		}
 
@@ -137,7 +136,7 @@ public class UDPEchoClientOld {
 					//System.err.println(
 					//		"Response wait time has timed out (" + TIMEOUT_MS + "ms), server did not respond in time");
 					//System.exit(1);
-							failures++;
+					failures++;
 				}
 				catch (IOException e) {
 					System.err.println("\n General error");
@@ -147,7 +146,7 @@ public class UDPEchoClientOld {
 				/* Compare sent and received message */
 				String receivedString = new String(receivePacket.getData(), receivePacket.getOffset(),
 						receivePacket.getLength());
-				
+
 				// Console messages removed to improve performance
 				if (receivedString.compareTo(MSG) == 0) {
 					//System.out.printf("%d bytes sent and received%n", receivePacket.getLength());
@@ -164,14 +163,6 @@ public class UDPEchoClientOld {
 			System.out.println("Successfully echoed " + packetsShipped + " out of " + sendRate + " messages");
 			System.out.println("Malformed packets or timeouts: " + failures);
 			System.out.println("------");
-
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
 		}
 		while (!oneTime);
 	}

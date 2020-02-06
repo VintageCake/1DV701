@@ -54,7 +54,7 @@ public class UDPEchoServerOld {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port " + MYPORT);
 		int counter = 0;
 		while (true) {
@@ -74,7 +74,7 @@ public class UDPEchoServerOld {
 				//System.out.printf(java.time.LocalTime.now() + " " + counter++ + " UDP echo request from %s", receivePacket.getAddress().getHostAddress());
 				//System.out.printf(" using port %d%n", receivePacket.getPort());
 			}
-			catch (PortUnreachableException e ) {
+			catch (PortUnreachableException e) {
 				System.err.println("Echo not delivered, port is unreachable");
 				System.exit(1);
 			}

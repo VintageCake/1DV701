@@ -11,13 +11,13 @@ public class tcpLightClient {
 	public static void main(String[] args) throws IOException {
 		Socket s = new Socket();
 		s.connect(new InetSocketAddress("127.0.0.1", 4950));
-		
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		DataOutputStream out = new DataOutputStream(s.getOutputStream());
-		
+
 		String outputMessage = "hello";
 		out.writeBytes(outputMessage);
-		
+
 		char[] test = new char[outputMessage.length()];
 		in.read(test);
 		String inputMessage = String.valueOf(test);
@@ -26,6 +26,6 @@ public class tcpLightClient {
 		}
 		System.out.println(inputMessage);
 		s.close();
-		
+
 	}
 }

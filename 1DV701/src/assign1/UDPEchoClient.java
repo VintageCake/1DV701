@@ -38,12 +38,12 @@ public class UDPEchoClient {
 			MSG = MSG.concat("A");
 		}
 		*/
-		
+
 		// Initialise variables for port number, buffer, send rate.
 		Integer portNumber = null;
 		byte[] buf = null;
 		Integer sendRate = null;
-		
+
 		// large try-catch block that validates and sanity checks all input arguments
 		try {
 			String ip = args[0];
@@ -110,6 +110,8 @@ public class UDPEchoClient {
 		DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
 		// nasty nested do-while
+		// TODO - Make sure this doesn't retry until second has actually passed!!
+		// TODO - Make good comments in this file
 		do {
 			long end = System.currentTimeMillis() + 1000; // Timer for 1s
 			int packetsShipped = 0;
@@ -139,7 +141,7 @@ public class UDPEchoClient {
 				/* Compare sent and received message */
 				String receivedString = new String(receivePacket.getData(), receivePacket.getOffset(),
 						receivePacket.getLength());
-				
+
 				// Console messages removed to improve performance, refer to 2.2.1 in the report.
 				if (receivedString.compareTo(MSG) == 0) {
 					//System.out.printf("%d bytes sent and received%n", receivePacket.getLength());

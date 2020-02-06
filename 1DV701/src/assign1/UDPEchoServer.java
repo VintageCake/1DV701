@@ -44,13 +44,13 @@ public class UDPEchoServer {
 			System.err.println("Socket creation error: " + e.getMessage());
 			System.exit(1);
 		}
-		
+
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
 		@SuppressWarnings("unused")
-		
-		
+
+
 		// Main server loop
-		int counter = 0;
+				int counter = 0;
 		while (true) {
 			try {
 				/* Create datagram packet for receiving message */
@@ -68,7 +68,7 @@ public class UDPEchoServer {
 				//System.out.printf(java.time.LocalTime.now() + " " + counter++ + " UDP echo request from %s", receivePacket.getAddress().getHostAddress());
 				//System.out.printf(" using port %d%n", receivePacket.getPort());
 			}
-			catch (PortUnreachableException e ) {
+			catch (PortUnreachableException e) {
 				System.err.println("Echo not delivered to server, port is unreachable");
 			}
 			catch (IOException e) {
@@ -77,7 +77,7 @@ public class UDPEchoServer {
 			}
 		}
 	}
-	
+
 	private static int verifyBuffer(String buffer) {
 		int testBuffer = Integer.parseInt(buffer);
 		if (testBuffer < 1 || testBuffer > 100000) {

@@ -14,11 +14,11 @@ public class TCPEchoClient {
 
 	public static void main(String[] args) {
 		if (args.length != 4) {
-			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
+			System.err.println("Usage: \"Destination address\", \"Port\", \"BufferSize\" (in bytes), \"send rate\"");
 			System.exit(1);
 		}
 
-		// Add warning if send buffer is smaller than message to be sent (or maybe iterate the bytes through the buffer??)
+		// TODO - Add warning if send buffer is smaller than message to be sent
 
 		/*
 		 * Can be used to define custom message length with a repeating character String
@@ -32,14 +32,14 @@ public class TCPEchoClient {
 
 		// Initialise variables for port number, buffer, send rate.
 		Integer portNumber = null;
-		int buf = 0;
+		byte[] buf = null;
 		Integer sendRate = null;
 
 		// try-catch block that validates and sanity checks all input arguments
 		try {
 			verifyIP(args[0]);
 			portNumber = verifyPort(args[1]);
-			buf = verifyBuffer(args[2]);
+			buf = new byte[verifyBuffer(args[2])];
 			sendRate = verifySendRate(args[3]);
 
 		}
@@ -57,7 +57,10 @@ public class TCPEchoClient {
 			oneTime = true;
 		}
 
-		// Argument setup finished
+		// Argument validation finished, main program below
+
+
+		// Creates client socket and sets up IO
 		TCPClientSocket tcpSocket = createSocket(args[0], portNumber, MYPORT);
 		try {
 			tcpSocket.setupIO();
@@ -66,27 +69,35 @@ public class TCPEchoClient {
 			System.out.println("Socket creation failed: " + e.getMessage());
 			System.exit(1);
 		}
+
+		// Main loop of program
+
+		//TODO - Wait until the time has actually eneded, right now this shit code immediately retries the main loop when it's done sending up to sendrate. Should wait out the second!!
 		do {
-			long end = System.currentTimeMillis() + 1000;
+			long end = System.currentTimeMillis() + 1000; // Set timer, 1s from now
 			int messagesShipped = 0;
 			int failures = 0;
 
 			do {
 				String receivedMessage = "";
 				try {
-					tcpSocket.write(MSG.getBytes());
+					tcpSocket.write(MSG.getBytes(), MSG.getBytes().length);
 
 					while (receivedMessage.length() < MSG.length()) {
-						receivedMessage = receivedMessage.concat(new String(tcpSocket.read(buf)));
+						// Fills buffer array with bytes from TCP stream (if there are any), read is how many new bytes there are from pos 0.
+						int read = tcpSocket.read(buf);
+						if (read > 0) { // if we got new bytes, concat the message
+							receivedMessage = receivedMessage.concat(new String(buf, 0, read));
+						}
 					}
 				}
-				catch (Exception e) {
+				catch (Exception e) { // If anything goes wrong, tell user why - break out of loop, tell program to initialize final print
 					System.out.println(e.getMessage());
 					oneTime = true;
 					break;
 				}
 
-
+				// Compares message, 0 means same content which means everything went well.
 				if (receivedMessage.compareTo(MSG) == 0) {
 					messagesShipped++;
 				}
@@ -143,6 +154,8 @@ public class TCPEchoClient {
 		return tcpSocket;
 	}
 
+	// All methods below will throw a NumberFormatException with a custom message when input is unexpected in some way.
+	// Verifies IP by splitting into four strings, verifying that those are all in the range of 0-255 when parsing them.
 	private static void verifyIP(String ip) {
 		String[] ipSplit = ip.split("\\.");
 		if (ipSplit.length < 4) {
@@ -156,6 +169,7 @@ public class TCPEchoClient {
 		}
 	}
 
+	// Verifies port range, range is 0 to 2^16-1.
 	private static Integer verifyPort(String port) {
 		int portNumber = Integer.parseInt(port);
 		if (portNumber < 0 || portNumber > ((int) (Math.pow(2, 16)) - 1)) {
