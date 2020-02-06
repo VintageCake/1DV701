@@ -17,13 +17,16 @@ public class TCPEchoClient {
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
 		}
-		
+
 		// Add warning if send buffer is smaller than message to be sent (or maybe iterate the bytes through the buffer??)
 
 		/*
 		 * Can be used to define custom message length with a repeating character String
-		 * MSG = ""; int defLength = 1400; for (int i = 0; i < defLength; i++) { MSG =
-		 * MSG.concat("A"); }
+		 * MSG = "";
+		 * int defLength = 1400;
+		 * for (int i = 0; i < defLength; i++) {
+		 * MSG = MSG.concat("A");
+		 * }
 		 */
 
 
@@ -82,6 +85,8 @@ public class TCPEchoClient {
 					oneTime = true;
 					break;
 				}
+
+
 				if (receivedMessage.compareTo(MSG) == 0) {
 					messagesShipped++;
 				}
@@ -107,7 +112,7 @@ public class TCPEchoClient {
 			System.exit(1);
 		}
 	}
-	
+
 	/*
 	 * Initialise socket by calling creation methods for TCPClientSocket
 	 * Handles all errors by telling user about error, and then closing the program.
