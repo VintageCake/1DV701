@@ -1,23 +1,14 @@
 package assign1.abstractions;
-/*
-  TCPClientSocket.java
-  Author: Love Samulesson ls223qx@student.lnu.se
-  Date: 2020-01-31
-  
-  An extension of the abstract socket that provides an implementation of a TCP client socket.
-  
-*/
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
 public class TCPClientSocket extends AbstractSocket {
 	private Socket tcpCSocket = null;
-	private DataOutputStream out = null;
-	private BufferedReader in = null;
+	private OutputStream out = null;
+	private InputStream in = null;
 	
 	public TCPClientSocket(String destAddress, int destPort, int sourcePort) throws IOException {
 		super(destAddress, destPort, sourcePort);
@@ -32,14 +23,16 @@ public class TCPClientSocket extends AbstractSocket {
 		tcpCSocket = new Socket(this.getDestination().getAddress(), this.getDestination().getPort());
 	}
 	public void setupIO() throws IOException {
-		out = new DataOutputStream(tcpCSocket.getOutputStream());
-		in = new BufferedReader(new InputStreamReader(tcpCSocket.getInputStream()));
+		out = tcpCSocket.getOutputStream();
+		in = tcpCSocket.getInputStream();
 	}
 	
 	public void write(byte[] bytes) throws IOException {
 		out.write(bytes);
 	}
-	// Read until buffer empty or buffer length is hit, then return a byte with exact length as message received.
+	// Read until buffer empty or buffer length is hit, then return a byte with exact length as message received.¨
+	// TODO - Fix this to read n-bytes of the buffer that is equivalent to the amount of bytes available, which can be done by using in.available().
+	// You should not consume unneeded amount of bytes from the memory!! Use the same buffer as defined in the beginning.
 	public byte[] read(int bufferLength) throws IOException {
 		byte[] temp = new byte[bufferLength];
 		int i = 0;
@@ -49,13 +42,13 @@ public class TCPClientSocket extends AbstractSocket {
 				break;
 			}
 		}
-		while (in.ready());
+		while (in.available() > 0);
 		byte[] formattedTmp = new byte[i];
 		System.arraycopy(temp, 0, formattedTmp, 0, i);
 		return formattedTmp;
 	}
 	public boolean hasData() throws IOException {
-		return in.ready();
+		return (in.available() > 0);
 	}
 
 	@Override

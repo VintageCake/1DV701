@@ -17,6 +17,8 @@ public class TCPEchoClient {
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
 		}
+		
+		// Add warning if send buffer is smaller than message to be sent (or maybe iterate the bytes through the buffer??)
 
 		/*
 		 * Can be used to define custom message length with a repeating character String
