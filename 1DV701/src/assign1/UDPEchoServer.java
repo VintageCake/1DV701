@@ -48,6 +48,7 @@ public class UDPEchoServer {
 
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
 
+		// TODO - Check how the server breaks when message received is larger than the buffer.
 		// Main server loop
 		@SuppressWarnings("unused") int counter = 0;
 		while (true) {

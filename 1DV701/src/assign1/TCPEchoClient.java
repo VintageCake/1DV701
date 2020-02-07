@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import assign1.abstractions.TCPClientSocket;
 
@@ -51,10 +52,39 @@ public class TCPEchoClient {
 			System.exit(1);
 		}
 
-		boolean oneTime = false;
+		boolean doNotLoop = false;
 		if (sendRate == 0) {
 			sendRate = 1;
-			oneTime = true;
+			doNotLoop = true;
+		}
+
+		// Handles the case where the receive buffer length is smaller than message length
+		// TODO - Check if program actually fails as expected when message size is larger than receive buffer
+		if (buf.length < MSG.getBytes().length) {
+			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
+			System.err.println("Message received from server will only be a substring of total message, message comparison will always return failure");
+			Scanner s = new Scanner(System.in);
+			System.err.println("Do you want to continue? (y/n)");
+
+			String decision = "";
+			boolean repeat;
+			do {
+				decision = s.nextLine();
+				switch (decision) {
+					case "y":
+						repeat = false;
+						System.out.println("Program continuing...");
+						break;
+
+					case "n":
+						System.err.println("Exiting...");
+						System.exit(1);
+
+					default:
+						repeat = true;
+						System.err.println("Please enter \"y\" or \"n\"");
+				}
+			} while (repeat);
 		}
 
 		// Argument validation finished, main program below
@@ -72,7 +102,6 @@ public class TCPEchoClient {
 
 		// Main loop of program
 
-		//TODO - Wait until the time has actually eneded, right now this shit code immediately retries the main loop when it's done sending up to sendrate. Should wait out the second!!
 		do {
 			long end = System.currentTimeMillis() + 1000; // Set timer, 1s from now
 			int messagesShipped = 0;
@@ -93,7 +122,7 @@ public class TCPEchoClient {
 				}
 				catch (Exception e) { // If anything goes wrong, tell user why - break out of loop, tell program to initialize final print
 					System.out.println(e.getMessage());
-					oneTime = true;
+					doNotLoop = true;
 					break;
 				}
 
@@ -105,14 +134,25 @@ public class TCPEchoClient {
 					failures++;
 				}
 			}
-			while (!oneTime && System.currentTimeMillis() < end && messagesShipped < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && messagesShipped < sendRate);
 
-			System.out.println("------");
-			System.out.println("Successfully echoed " + messagesShipped + " out of " + sendRate + " messages");
-			System.out.println("Malformed packets or timeouts: " + failures);
-			System.out.println("------");
+			// Waits out the remaining time, if any.
+			while(System.currentTimeMillis() < end) {
+				try {
+					Thread.sleep(0, 500);
+				}
+				// We don't really need to do anything here, since this main thread isn't intended to be ran as a Runnable.
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					System.err.println(e.getMessage());
+					doNotLoop = true;
+				}
+			}
+
+
+			System.out.println("[Echoed " + messagesShipped + " out of " + sendRate + " messages ------ " + "Malformed messages or timeouts: " + failures + "]");
 		}
-		while (!oneTime);
+		while (!doNotLoop);
 
 		// When main loop is finished, try to close the socket.
 		try {

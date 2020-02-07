@@ -16,6 +16,7 @@ import java.net.DatagramPacket;
 import java.net.PortUnreachableException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Scanner;
 
 import assign1.abstractions.UDPClientSocket;
 
@@ -86,12 +87,37 @@ public class UDPEchoClient {
 
 		// Handles the case where the argument for message rate is 0.
 		// Sets boolean to let program know we want to terminate after one message.
-		boolean oneTime = false;
+		boolean doNotLoop = false;
 		if (sendRate == 0) {
 			sendRate = 1;
-			oneTime = true;
+			doNotLoop = true;
 		}
-		// TODO - Create warning message when message is larger than buffer
+		if (buf.length < MSG.getBytes().length) {
+			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
+			System.err.println("Message received from server will only be a substring of total message, message comparison will always return failure");
+			Scanner s = new Scanner(System.in);
+			System.err.println("Do you want to continue? (y/n)");
+
+			String decision = "";
+			boolean repeat;
+			do {
+				decision = s.nextLine();
+				switch (decision) {
+					case "y":
+						repeat = false;
+						System.out.println("Program continuing...");
+						break;
+
+					case "n":
+						System.err.println("Exiting...");
+						System.exit(1);
+
+					default:
+						repeat = true;
+						System.err.println("Please enter \"y\" or \"n\"");
+				}
+			} while (repeat);
+		}
 
 		/* Create socket */
 		UDPClientSocket clientSocket = null;
@@ -113,7 +139,7 @@ public class UDPEchoClient {
 		DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
 		// Main loop
-		// TODO - Make sure this doesn't retry until second has actually passed!!
+		// TODO - Check if program breaks when mismatched buffer is used
 		// TODO - Make good comments in this file
 		do {
 			long end = System.currentTimeMillis() + 1000; // Timer for 1s
@@ -155,15 +181,26 @@ public class UDPEchoClient {
 					failures++;
 				}
 			}
-			while (!oneTime && System.currentTimeMillis() < end && packetsShipped < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && packetsShipped < sendRate);
 
-			System.out.println("------");
-			System.out.println("Successfully echoed " + packetsShipped + " out of " + sendRate + " messages");
-			System.out.println("Malformed packets or timeouts: " + failures);
-			System.out.println("------");
+			// Waits out the remaining time, if any.
+			while(System.currentTimeMillis() < end) {
+				try {
+					Thread.sleep(0, 500);
+				}
+				// We don't really need to do anything here, since this main thread isn't intended to be ran as a Runnable.
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					System.err.println(e.getMessage());
+					doNotLoop = true;
+				}
+			}
+
+
+			System.out.println("[Echoed " + packetsShipped + " out of " + sendRate + " packets ------ " + "Malformed packets or timeouts: " + failures + "]");
 
 		}
-		while (!oneTime);
+		while (!doNotLoop);
 	}
 
 }

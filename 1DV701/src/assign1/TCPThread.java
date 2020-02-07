@@ -8,13 +8,13 @@ import assign1.abstractions.TCPClientSocket;
 
 public class TCPThread implements Runnable {
 	TCPClientSocket sock;
-	byte[] buffer ;
-	int TIMEOUT_MS;
+	byte[] buffer;
+	int timeoutMs;
 
 	public TCPThread(TCPClientSocket tcpClientSocket, int bufferSize, int timeout) {
 		sock = tcpClientSocket;
 		buffer = new byte[bufferSize];
-		TIMEOUT_MS = timeout;
+		timeoutMs = timeout;
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class TCPThread implements Runnable {
 				+ " opened");
 		while (true) {
 			try {
-				sock.setTimeout(TIMEOUT_MS);
+				sock.setTimeout(timeoutMs);
 				sock.setupIO();
 
 				/*
