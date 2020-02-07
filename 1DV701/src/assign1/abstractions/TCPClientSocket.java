@@ -11,8 +11,10 @@ public class TCPClientSocket extends AbstractSocket {
 	private OutputStream out = null;
 	private InputStream in = null;
 
+	// Main constructor
 	public TCPClientSocket(String destAddress, int destPort, int sourcePort) throws IOException {
 		super(destAddress, destPort, sourcePort);
+		// Initializes destination and source InetSocketAddresses
 	}
 
 	public TCPClientSocket(Socket s) { // Can put a socket already in use straight into this abstraction layer instead of creating a new socket.
@@ -38,12 +40,12 @@ public class TCPClientSocket extends AbstractSocket {
 	// Read the whole buffer or until buffer length is hit, returns int corresponding to amount of bytes read from buffer.
 	public Integer read(byte[] buffer) throws IOException {
 		int read = 0;
-		int length;
-		if ((length = in.available()) > 0) {
-			if (length > buffer.length) { // Special case handling, when input stream had more bytes than array size
-				length = buffer.length;
+		int bytesToRead = in.available();
+		if (bytesToRead > 0) {
+			if (bytesToRead > buffer.length) { // Special case handling, when input stream had more bytes than array size
+				bytesToRead = buffer.length;
 			}
-			read = in.read(buffer, 0, length);
+			read = in.read(buffer, 0, bytesToRead);
 		}
 		return read;
 	}

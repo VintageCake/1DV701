@@ -39,15 +39,15 @@ public class TCPThread implements Runnable {
 				See TCPClientSocket for additional detail about the implementation of the methods write() and read().
 				 */
 				boolean sendData = false;
-				int len = 0;
+				int bytesRead = 0;
 				while (!sock.isClosed()) {
 					if (sendData) {
-						sock.write(buffer, len);
+						sock.write(buffer, bytesRead);
 						sendData = false;
 					}
 					else {
-						len = sock.read(buffer);
-						if (len > 0) {
+						bytesRead = sock.read(buffer);
+						if (bytesRead > 0) {
 							sendData = true;
 						}
 					}

@@ -33,6 +33,7 @@ public class TCPEchoServer {
 			System.err.println("Server socket creation failed: " + e.getMessage());
 			System.exit(1);
 		}
+
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + welcome.getLocalPort());
 
 		// Main server loop
@@ -44,6 +45,11 @@ public class TCPEchoServer {
 				t.start();
 			}
 		}
+		// Handles exceptions thrown by accept()
+		/*
+		I couldn't get that method to throw anything even when trying really hard,
+		so I assume it only throws when something terrible has happened
+		*/
 		catch (IOException e) {
 			System.err.println("Server socket failed, reason: " + e.getMessage());
 			System.err.println("Exiting...");

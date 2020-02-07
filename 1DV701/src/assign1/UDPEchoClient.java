@@ -45,14 +45,16 @@ public class UDPEchoClient {
 		Integer sendRate = null;
 
 		// large try-catch block that validates and sanity checks all input arguments
+		// Throws an exception when invalid or unexpected argument is found, with custom message.
 		try {
+			// Splits IP arg into four parts, parses the parts as Integers and checks if they are in range 0-255.
 			String ip = args[0];
-			String[] ipSplit = ip.split("\\.");
+			String[] ipSplit = ip.split("\\."); // . means any character, so you have to escape it for regex to work.
 			if (ipSplit.length < 4) {
 				throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 			}
-			for (int i = 0; i < ipSplit.length; i++) {
-				int test = Integer.parseInt(ipSplit[i]);
+			for (String s : ipSplit) {
+				int test = Integer.parseInt(s);
 				if (test > 255 || test < 0) {
 					throw new NumberFormatException("Invalid IP, use format: 0-255.0-255.0-255.0-255");
 				}
@@ -89,6 +91,7 @@ public class UDPEchoClient {
 			sendRate = 1;
 			oneTime = true;
 		}
+		// TODO - Create warning message when message is larger than buffer
 
 		/* Create socket */
 		UDPClientSocket clientSocket = null;
@@ -97,9 +100,9 @@ public class UDPEchoClient {
 			clientSocket = new UDPClientSocket(args[0], portNumber, MYPORT);
 			clientSocket.setTimeout(TIMEOUT_MS); // Set max wait for a .receive().
 		}
-		catch (SocketException e1) {
-			e1.printStackTrace();
-			System.err.println("\nSocket binding failed");
+		// Basically only throws an exception when the port was already in use.
+		catch (SocketException e) {
+			System.err.println("\nSocket binding failed: " + e.getMessage());
 			System.exit(1);
 		}
 
@@ -109,7 +112,7 @@ public class UDPEchoClient {
 		/* Create datagram packet for receiving echoed message */
 		DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
-		// nasty nested do-while
+		// Main loop
 		// TODO - Make sure this doesn't retry until second has actually passed!!
 		// TODO - Make good comments in this file
 		do {

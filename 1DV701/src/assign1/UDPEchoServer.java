@@ -25,13 +25,14 @@ public class UDPEchoServer {
 			System.exit(1);
 		}
 
+		// Buffer creation and input validation
 		byte[] buf = null;
 		try {
 			int testBuffer = verifyBuffer(args[0]);
 			buf = new byte[testBuffer];
 		}
-		catch (NumberFormatException e1) {
-			System.err.println(e1.getMessage());
+		catch (NumberFormatException e) {
+			System.err.println(e.getMessage());
 			System.exit(1);
 		}
 
@@ -46,11 +47,9 @@ public class UDPEchoServer {
 		}
 
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
-		@SuppressWarnings("unused")
-
 
 		// Main server loop
-				int counter = 0;
+		@SuppressWarnings("unused") int counter = 0;
 		while (true) {
 			try {
 				/* Create datagram packet for receiving message */
@@ -65,11 +64,12 @@ public class UDPEchoServer {
 
 				/* Send message */
 				serverSocket.send(sendPacket);
+				// Debug messages really only kill performance, not needed for every packet received.
 				//System.out.printf(java.time.LocalTime.now() + " " + counter++ + " UDP echo request from %s", receivePacket.getAddress().getHostAddress());
 				//System.out.printf(" using port %d%n", receivePacket.getPort());
 			}
 			catch (PortUnreachableException e) {
-				System.err.println("Echo not delivered to server, port is unreachable");
+				System.err.println("Echo not delivered: " + e.getMessage());
 			}
 			catch (IOException e) {
 				System.err.println("General error: " + e.getMessage());
@@ -78,6 +78,7 @@ public class UDPEchoServer {
 		}
 	}
 
+	// Throws exception when buffer argument is invalid (not int) or out of range
 	private static int verifyBuffer(String buffer) {
 		int testBuffer = Integer.parseInt(buffer);
 		if (testBuffer < 1 || testBuffer > 100000) {
