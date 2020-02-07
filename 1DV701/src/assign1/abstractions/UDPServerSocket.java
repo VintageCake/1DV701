@@ -51,7 +51,7 @@ public class UDPServerSocket extends AbstractSocket {
 	}
 
 	@Override
-	boolean isClosed() {
+	public boolean isClosed() {
 		return socket.isClosed();
 	}
 

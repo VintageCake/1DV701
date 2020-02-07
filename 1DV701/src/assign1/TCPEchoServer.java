@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import assign1.abstractions.TCPClientSocket;
+import assign1.abstractions.TCPServerSocket;
 
 public class TCPEchoServer {
 	private static final int MYPORT = 4950;
@@ -24,9 +25,9 @@ public class TCPEchoServer {
 			System.exit(1);
 		}
 
-		ServerSocket welcome = null;
+		TCPServerSocket welcome = null;
 		try {
-			welcome = new ServerSocket(MYPORT);
+			welcome = new TCPServerSocket(MYPORT);
 		}
 		// ServerSocket throws error basically only with no network adapter enabled or port already bound.
 		catch (IOException e) {
@@ -34,7 +35,7 @@ public class TCPEchoServer {
 			System.exit(1);
 		}
 
-		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + welcome.getLocalPort());
+		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + welcome.getSource().getPort());
 
 		// Main server loop
 		try {
