@@ -24,7 +24,9 @@ public class TCPThread implements Runnable {
 				+ " opened");
 		while (true) {
 			try {
+				// Set how many ms this thread should wait until connection is declared abandoned by other side, terminating thread.
 				sock.setTimeout(timeoutMs);
+				// Sets up the 'backend' InputStream and OutputStream
 				sock.setupIO();
 
 				/*

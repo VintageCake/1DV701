@@ -11,7 +11,7 @@ import assign1.abstractions.TCPClientSocket;
 public class TCPEchoClient {
 	public static final int MYPORT = 0; // In sockets, 0 means to use a client port in the DYNAMIC (private) port range.
 	public static final String MSG = "An Echo message!";
-	public static final int TIMEOUT_MS = 50; // Sets message timeout
+	public static final int TIMEOUT_MS = 1000; // Sets message timeout
 
 	public static void main(String[] args) {
 		if (args.length != 4) {
@@ -62,7 +62,7 @@ public class TCPEchoClient {
 		// TODO - Check if program actually fails as expected when message size is larger than receive buffer
 		if (buf.length < MSG.getBytes().length) {
 			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
-			System.err.println("Message received from server will only be a substring of total message, message comparison will always return failure");
+			System.err.println("Message received from server will only be a substring of total message, performance will be degraded");
 			Scanner s = new Scanner(System.in);
 			System.err.println("Do you want to continue? (y/n)");
 
@@ -93,19 +93,22 @@ public class TCPEchoClient {
 		// Creates client socket and sets up IO
 		TCPClientSocket tcpSocket = createSocket(args[0], portNumber, MYPORT);
 		try {
+			// Creates InputStream and OutputStream in the 'backend' abstraction class.
 			tcpSocket.setupIO();
+			tcpSocket.setTimeout(TIMEOUT_MS);
 		}
 		catch (IOException e) {
 			System.out.println("Socket creation failed: " + e.getMessage());
 			System.exit(1);
 		}
+		System.out.println("Client started, connection established");
 
 		// Main loop of program
-
 		do {
 			long end = System.currentTimeMillis() + 1000; // Set timer, 1s from now
 			int messagesShipped = 0;
 			int failures = 0;
+			boolean restFailed = false;
 
 			do {
 				String receivedMessage = "";
@@ -120,8 +123,11 @@ public class TCPEchoClient {
 						}
 					}
 				}
-				catch (Exception e) { // If anything goes wrong, tell user why - break out of loop, tell program to initialize final print
-					System.out.println(e.getMessage());
+				catch (IOException e) { // If anything goes wrong, tell user why - break out of loop, tell program to initialize final print
+					System.out.println("Something went wrong: " + e.getMessage());
+					System.out.println("Stopping execution and printing last set of data...");
+					failures++;
+					restFailed = true;
 					doNotLoop = true;
 					break;
 				}
@@ -150,8 +156,10 @@ public class TCPEchoClient {
 				}
 			}
 
-
 			System.out.println("[Echoed " + messagesShipped + " out of " + sendRate + " messages ------ " + "Malformed messages or timeouts: " + failures + "]");
+			if (restFailed) {
+				System.out.println("[Remaining packets failed to be sent due to error]");
+			}
 		}
 		while (!doNotLoop);
 

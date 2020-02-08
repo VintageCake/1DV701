@@ -8,7 +8,8 @@ import assign1.abstractions.TCPServerSocket;
 
 public class TCPEchoServer {
 	private static final int MYPORT = 4950;
-	private static final int TIMEOUT_MS = 0;
+	// Timeout set for dead connections are 90s.
+	private static final int TIMEOUT_MS = 90000;
 
 	public static void main(String[] args) {
 		if (args.length != 1) {
@@ -35,7 +36,7 @@ public class TCPEchoServer {
 			System.exit(1);
 		}
 
-		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + welcome.getSource().getPort());
+		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: (" + welcome.getSource().getPort() + ") with buffer size: (" + bufSize + ")");
 
 		// Main server loop
 		try {
