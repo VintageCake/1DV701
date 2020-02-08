@@ -1,8 +1,8 @@
 
+Psquid:S1135"2Complete the task associated to this TODO comment.(Œ›ò 8Ì‹§¦‚.
 wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÃÈÂÍıÿÿÿÿ
-Psquid:S1135"2Complete the task associated to this TODO comment.(Œ›ò 8”ÜÔä.
-bsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(–“§
+psquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 34 to the 15 allowed.(Çµí‘8Ì‹§¦‚.
 i
-squid:S128O"LEnd this switch case with an unconditional break, return or throw statement.(»è˜Ô8îƒŞ…‚.
-Psquid:S1135>"2Complete the task associated to this TODO comment.(¨ß¸÷8“ø²†‚.
-isquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 34 to the 15 allowed.(Çµí‘
+squid:S128O"LEnd this switch case with an unconditional break, return or throw statement.(»è˜Ô8Ì‹§¦‚.
+isquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(–“§8Ì‹§¦‚.
+Psquid:S1135>"2Complete the task associated to this TODO comment.(¨ß¸÷8Ì‹§¦‚.

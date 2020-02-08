@@ -46,34 +46,39 @@ public class TCPClientSocket extends AbstractSocket {
 	Furthermore, SocketException is only thrown on a write operation.
 	Even more strange, it's only thrown after TWO writes. What??
 
-	I used the following approach in a previous iteration of this program, read -1 and try to write -1 to the output stream until it threw a socket exception. That works, but is ugly.
+	I used the following approach in a PREVIOUS iteration of this program, read -1 and try to write -1 to the output stream until it threw a socket exception. That works, but is ugly.
 
 	My solution? Attempt to read 1 byte when the amount of bytes in the TCP buffer is currently 0.
 	This puts the program into a blocking operation while also ensuring that an input stream going EOF returns -1 to higher levels of my program.
 
-	Is it more inefficient? Does calling a read with a one-byte request break efficiency?
-	Not really, the underlying implementation for read(byte[] b, int off, int len) uses the default read() without arguments in a loop anyway,
-	the only extra inefficiency is with my implementation that will concatenate that single byte into a string, when there COULD be more data on the way.
 	 */
 	// Read the whole buffer or until buffer length is hit, returns int corresponding to amount of bytes read from buffer.
 	public Integer read(byte[] buffer) throws IOException {
 		int read = 0;
-		int bytesToRead = in.available();
+		int bytesToRead = 1;
+
+		read = in.read(buffer, 0, bytesToRead);
+		if (read == -1) {
+			throw new SocketException("Connection was terminated by host");
+		}
+
+		bytesToRead = in.available();
 		if (bytesToRead > 0) {
-			if (bytesToRead > buffer.length) { // Special case handling, when input stream had more bytes than array size
-				bytesToRead = buffer.length;
+			if (bytesToRead > buffer.length-1) { // Special case handling, when input stream had more bytes than array size
+				bytesToRead = buffer.length-1;
 			}
 		}
 		else {
-			bytesToRead = 1;
+			bytesToRead = 0;
 		}
-		read = in.read(buffer, 0, bytesToRead);
+		read += in.read(buffer, 1, bytesToRead);
 		return read;
+
 	}
 	/*
 	This is a very interesting method, it simply takes whatever is present in the input stream and shoves it into the output stream.
 	Perfect! But... it doesn't throw an exception when using programs like netcat, that sends a fin/ack instead of an RST.
-	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks, also only appears after java 9.
+	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks, also only first implemented in java 9.
 
 	public void echo() throws IOException {
 		in.transferTo(out);
