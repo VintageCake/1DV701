@@ -51,7 +51,9 @@ public class TCPClientSocket extends AbstractSocket {
 	My solution? Attempt to read 1 byte when the amount of bytes in the TCP buffer is currently 0.
 	This puts the program into a blocking operation while also ensuring that an input stream going EOF returns -1 to higher levels of my program.
 
-	It is however, quite inefficient.
+	Is it more inefficient? Does calling a read with a one-byte request break efficiency?
+	Not really, the underlying implementation for read(byte[] b, int off, int len) uses the default read() without arguments in a loop anyway,
+	the only extra inefficiency is with my implementation that will concatenate that single byte into a string, when there COULD be more data on the way.
 	 */
 	// Read the whole buffer or until buffer length is hit, returns int corresponding to amount of bytes read from buffer.
 	public Integer read(byte[] buffer) throws IOException {
@@ -71,11 +73,12 @@ public class TCPClientSocket extends AbstractSocket {
 	/*
 	This is a very interesting method, it simply takes whatever is present in the input stream and shoves it into the output stream.
 	Perfect! But... it doesn't throw an exception when using programs like netcat, that sends a fin/ack instead of an RST.
-	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks.
-	 */
+	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks, also only appears after java 9.
+
 	public void echo() throws IOException {
 		in.transferTo(out);
 	}
+	*/
 
 	public boolean hasData() throws IOException {
 		return (in.available() > 0);
