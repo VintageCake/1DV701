@@ -57,8 +57,8 @@ public class TCPClientSocket extends AbstractSocket {
 		int read = 0;
 		int bytesToRead = 1;
 
-		read = in.read(buffer, 0, bytesToRead);
-		if (read == -1) {
+		read = in.read(buffer, 0, bytesToRead); // attempt to read 1 byte
+		if (read == -1) { // If stream is "end of file", connection has been killed.
 			throw new SocketException("Connection was terminated by host");
 		}
 
@@ -71,13 +71,13 @@ public class TCPClientSocket extends AbstractSocket {
 		else {
 			bytesToRead = 0;
 		}
-		read += in.read(buffer, 1, bytesToRead);
+		read += in.read(buffer, 1, bytesToRead); // read the rest of the bytes available, starting from index 1 in the buffer
 		return read;
 
 	}
 	/*
 	This is a very interesting method, it simply takes whatever is present in the input stream and shoves it into the output stream.
-	Perfect! But... it doesn't throw an exception when using programs like netcat, that sends a fin/ack instead of an RST.
+	Perfect! But... it doesn't throw an exception when using programs like netcat, that sends a FIN/ACK instead of an RST.
 	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks, also only first implemented in java 9.
 
 	public void echo() throws IOException {
@@ -104,9 +104,10 @@ public class TCPClientSocket extends AbstractSocket {
 
 	}
 
+	// If special socket methods not abstracted away is needed
 	public Socket getSocket() {
 		return tcpCSocket;
-	} // If special socket methods not abstracted away is needed
+	}
 
 	public boolean isClosed() {
 		return tcpCSocket.isClosed();

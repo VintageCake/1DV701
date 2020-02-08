@@ -22,7 +22,7 @@ import assign1.abstractions.UDPClientSocket;
 
 public class UDPEchoClient {
 	public static final int MYPORT = 0; // In sockets, 0 means to use a client port in the DYNAMIC (private) port range.
-	public static final String MSG = "An Echo message!";
+	public static String MSG = "An Echo message!";
 	public static final int TIMEOUT_MS = 50; // Sets message timeout
 
 	public static void main(String[] args) {
@@ -31,10 +31,10 @@ public class UDPEchoClient {
 			System.exit(1);
 		}
 		
-		/* Can be used to define custom message length, for testing different message sizes and layer 3 fragmentation
-		 * 
-		String MSG = "";
-		int defLength = 1400;
+		//Can be used to define custom message length, for testing different message sizes and layer 3 fragmentation
+		/*
+		MSG = "";
+		int defLength = 3000;
 		for (int i = 0; i < defLength; i++) {
 			MSG = MSG.concat("A");
 		}
@@ -151,19 +151,24 @@ public class UDPEchoClient {
 					clientSocket.send(sendPacket);
 					clientSocket.receive(receivePacket);
 				}
-				catch (PortUnreachableException e) { // Port Unreachable seems to either not work with DatagramSocket, or my firewall is blocking ICMP.
+				// Port Unreachable seems to not really work even though my socket is 'connected', unfortunately.
+				catch (PortUnreachableException e) {
 					System.err.println("\n Port unreachable, server no longer accepting packets");
+					doNotLoop = true;
+					failures++;
+					break;
+				}
+				// If receive address is different from the connected socket address. Really only possible with extremely broken NAT or something.
+				catch (IllegalArgumentException e) {
+					System.err.println("\n Tried to send malformed packet, destination address does not match expected value");
 					System.exit(1);
 				}
-				catch (IllegalArgumentException e) { // Basically impossible to ever reach this, would require someone to edit the dPacket dest addr in debug mode.
-					System.err.println("\n Tried to send malformed packet, destination address invalid");
-					System.exit(1);
-				}
-				catch (SocketTimeoutException e) { // .receive() will throw timeout when no response is heard for the user defined length of TIMEOUT_MS
+				// socket.receive() will throw timeout when no response is heard for the user defined length of TIMEOUT_MS
+				catch (SocketTimeoutException e) {
 					failures++;
 				}
 				catch (IOException e) {
-					System.err.println("\n General error");
+					System.err.println("General error: " + e.getMessage());
 					System.exit(1);
 				}
 
@@ -186,6 +191,7 @@ public class UDPEchoClient {
 			// Waits out the remaining time, if any.
 			while(System.currentTimeMillis() < end) {
 				try {
+					// Improves performance of program so it doesn't soak up 100% core util when waiting.
 					Thread.sleep(0, 500);
 				}
 				// We don't really need to do anything here, since this main thread isn't intended to be ran as a Runnable.

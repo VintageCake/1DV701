@@ -65,15 +65,13 @@ public class UDPEchoServer {
 
 				/* Send message */
 				serverSocket.send(sendPacket);
+
 				// Debug messages really only kill performance, not needed for every packet received.
 				//System.out.printf(java.time.LocalTime.now() + " " + counter++ + " UDP echo request from %s", receivePacket.getAddress().getHostAddress());
 				//System.out.printf(" using port %d%n", receivePacket.getPort());
 			}
-			catch (PortUnreachableException e) {
-				System.err.println("Echo not delivered: " + e.getMessage());
-			}
 			catch (IOException e) {
-				System.err.println("General error: " + e.getMessage());
+				System.err.println(java.time.LocalTime.now() + " Error: " + e.getMessage());
 				System.exit(1);
 			}
 		}
