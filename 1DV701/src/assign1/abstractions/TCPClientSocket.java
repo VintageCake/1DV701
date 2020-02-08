@@ -37,6 +37,22 @@ public class TCPClientSocket extends AbstractSocket {
 		out.write(bytes, 0, length);
 	}
 
+	/* Shenanigans when using read()
+	Why does this break when using it for my server? Why can't i just ask in.available and then simply read the amount of bytes given?
+	Because the program doesn't correctly detect a TCP FIN/ACK or RST when doing that - you HAVE to test the connection with a read.
+
+	Whenever a socket gets closed by a RST or FIN/ACK, the stream really doesn't know it has been exhausted.
+	It only knows when you try to READ from it. Then it will flag EOF and return -1 if you are using read().
+	Furthermore, SocketException is only thrown on a write operation.
+	Even more strange, it's only thrown after TWO writes. What??
+
+	I used the following approach in a previous iteration of this program, read -1 and try to write -1 to the output stream until it threw a socket exception. That works, but is ugly.
+
+	My solution? Attempt to read 1 byte when the amount of bytes in the TCP buffer is currently 0.
+	This puts the program into a blocking operation while also ensuring that an input stream going EOF returns -1 to higher levels of my program.
+
+	It is however, quite inefficient.
+	 */
 	// Read the whole buffer or until buffer length is hit, returns int corresponding to amount of bytes read from buffer.
 	public Integer read(byte[] buffer) throws IOException {
 		int read = 0;
@@ -45,9 +61,20 @@ public class TCPClientSocket extends AbstractSocket {
 			if (bytesToRead > buffer.length) { // Special case handling, when input stream had more bytes than array size
 				bytesToRead = buffer.length;
 			}
-			read = in.read(buffer, 0, bytesToRead);
 		}
+		else {
+			bytesToRead = 1;
+		}
+		read = in.read(buffer, 0, bytesToRead);
 		return read;
+	}
+	/*
+	This is a very interesting method, it simply takes whatever is present in the input stream and shoves it into the output stream.
+	Perfect! But... it doesn't throw an exception when using programs like netcat, that sends a fin/ack instead of an RST.
+	This means that the connection will again just be kinda left hanging open, not great. Unusable for the tasks.
+	 */
+	public void echo() throws IOException {
+		in.transferTo(out);
 	}
 
 	public boolean hasData() throws IOException {

@@ -50,6 +50,9 @@ public class TCPThread implements Runnable {
 						if (bytesRead > 0) {
 							sendData = true;
 						}
+						else if (bytesRead == -1) {
+							throw new SocketException("InputStream reached EOF, Connection was terminated");
+						}
 					}
 				}
 			}

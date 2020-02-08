@@ -1,0 +1,5 @@
+
+Psquid:S11353"2Complete the task associated to this TODO comment.(õÄè8åØ¾†‚.
+Isquid:S14815",Remove this unused "counter" local variable.(ÿ‹èl8Î±¦ü.
+isquid:CommentedOutCodeLineE"<This block of commented-out lines of code should be removed.(ëäÀ¯8Î±¦ü.
+wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÃÈÂÍıÿÿÿÿ

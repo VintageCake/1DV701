@@ -1,0 +1,10 @@
+
+csquid:CommentedOutCodeLine°"<This block of commented-out lines of code should be removed.(¬ãÓ”
+wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÃÈÂÍýÿÿÿÿ
+Vsquid:S1135"2Complete the task associated to this TODO comment.(Ô›ã¨ûÿÿÿÿ8ò•ûå.
+Vsquid:S1135Ž"2Complete the task associated to this TODO comment.(ý•³Šúÿÿÿÿ8æÃ‡‚.
+isquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 46 to the 15 allowed.(Çµí‘
+gsquid:CommentedOutCodeLine$"<This block of commented-out lines of code should be removed.(³ðÔüÿÿÿÿ
+csquid:CommentedOutCodeLine´"<This block of commented-out lines of code should be removed.(“ÄÌõ
+i
+squid:S128o"LEnd this switch case with an unconditional break, return or throw statement.(»è˜Ô8Ú’³‡‚.
