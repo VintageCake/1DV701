@@ -101,7 +101,7 @@ public class TCPEchoClient {
 			System.out.println("Socket creation failed: " + e.getMessage());
 			System.exit(1);
 		}
-		System.out.println("Client started, connection established");
+		System.out.println("Connection established with server, starting to echo messages...");
 
 		// Main loop of program
 		do {
@@ -140,7 +140,7 @@ public class TCPEchoClient {
 					failures++;
 				}
 			}
-			while (!doNotLoop && System.currentTimeMillis() < end && messagesShipped < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && messagesShipped+failures < sendRate);
 
 			// Waits out the remaining time, if any.
 			while(System.currentTimeMillis() < end) {

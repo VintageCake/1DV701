@@ -94,7 +94,7 @@ public class UDPEchoClient {
 		}
 		if (buf.length < MSG.getBytes().length) {
 			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
-			System.err.println("Message received from server will only be a substring of total message, message comparison will always return failure");
+			System.err.println("Message received from server will only be a substring of total message, message comparison will always return fail!");
 			Scanner s = new Scanner(System.in);
 			System.err.println("Do you want to continue? (y/n)");
 
@@ -186,7 +186,7 @@ public class UDPEchoClient {
 					failures++;
 				}
 			}
-			while (!doNotLoop && System.currentTimeMillis() < end && packetsShipped < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && packetsShipped+failures < sendRate);
 
 			// Waits out the remaining time, if any.
 			while(System.currentTimeMillis() < end) {
