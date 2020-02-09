@@ -24,6 +24,7 @@ public class UDPEchoServer {
 			System.err.println("Need to define buffer size as argument!");
 			System.exit(1);
 		}
+		// TODO - Look over comments
 
 		// Buffer creation and input validation
 		byte[] buf = null;
@@ -48,7 +49,7 @@ public class UDPEchoServer {
 
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
 
-		// TODO - Check how the server breaks when message received is larger than the buffer.
+		// If the received message is larger than the buffer, the message is cut off and only a substring with equal length to the buffer is echoed back.
 		// Main server loop
 		@SuppressWarnings("unused") int counter = 0;
 		while (true) {

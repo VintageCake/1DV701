@@ -30,6 +30,7 @@ public class UDPEchoClient {
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
 		}
+		// TODO - Look over comments
 		
 		//Can be used to define custom message length, for testing different message sizes and layer 3 fragmentation
 		/*
@@ -139,8 +140,6 @@ public class UDPEchoClient {
 		DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
 		// Main loop
-		// TODO - Check if program breaks when mismatched buffer is used
-		// TODO - Make good comments in this file
 		do {
 			long end = System.currentTimeMillis() + 1000; // Timer for 1s
 			int packetsShipped = 0;

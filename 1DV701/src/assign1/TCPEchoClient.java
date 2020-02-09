@@ -19,8 +19,6 @@ public class TCPEchoClient {
 			System.exit(1);
 		}
 
-		// TODO - Add warning if send buffer is smaller than message to be sent
-
 		/*
 		 * Can be used to define custom message length with a repeating character String
 		 * MSG = "";
@@ -59,7 +57,7 @@ public class TCPEchoClient {
 		}
 
 		// Handles the case where the receive buffer length is smaller than message length
-		// TODO - Check if program actually fails as expected when message size is larger than receive buffer
+		// If the receive buffer is smaller than message length, the program still works fine, but with degraded performance.
 		if (buf.length < MSG.getBytes().length) {
 			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
 			System.err.println("Message received from server will only be a substring of total message, performance will be degraded");
