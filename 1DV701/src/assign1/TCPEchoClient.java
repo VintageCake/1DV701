@@ -1,12 +1,12 @@
 package assign1;
 
+import assign1.abstractions.TCPClientSocket;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
-import assign1.abstractions.TCPClientSocket;
 
 public class TCPEchoClient {
 	public static final int MYPORT = 0; // In sockets, 0 means to use a client port in the DYNAMIC (private) port range.
@@ -142,10 +142,10 @@ public class TCPEchoClient {
 					failures++;
 				}
 			}
-			while (!doNotLoop && System.currentTimeMillis() < end && messagesShipped+failures < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && messagesShipped + failures < sendRate);
 
 			// Waits out the remaining time, if any.
-			while(System.currentTimeMillis() < end) {
+			while (System.currentTimeMillis() < end) {
 				try {
 					//
 					Thread.sleep(0, 500);

@@ -9,12 +9,11 @@ package assign1;
   
 */
 
+import assign1.abstractions.UDPServerSocket;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.PortUnreachableException;
 import java.net.SocketException;
-
-import assign1.abstractions.UDPServerSocket;
 
 public class UDPEchoServer {
 	// Listening port

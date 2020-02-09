@@ -64,8 +64,8 @@ public class TCPClientSocket extends AbstractSocket {
 
 		bytesToRead = in.available();
 		if (bytesToRead > 0) {
-			if (bytesToRead > buffer.length-1) { // Special case handling, when input stream had more bytes than array size
-				bytesToRead = buffer.length-1;
+			if (bytesToRead > buffer.length - 1) { // Special case handling, when input stream had more bytes than array size
+				bytesToRead = buffer.length - 1;
 			}
 		}
 		else {

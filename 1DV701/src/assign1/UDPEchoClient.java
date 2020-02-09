@@ -11,6 +11,8 @@ package assign1;
   This program uses the abstract socket made by me for the VG task 2.
 */
 
+import assign1.abstractions.UDPClientSocket;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.PortUnreachableException;
@@ -18,19 +20,17 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 
-import assign1.abstractions.UDPClientSocket;
-
 public class UDPEchoClient {
 	public static final int MYPORT = 0; // In sockets, 0 means to use a client port in the DYNAMIC (private) port range.
-	public static String MSG = "An Echo message!";
 	public static final int TIMEOUT_MS = 50; // Sets message timeout
+	public static String MSG = "An Echo message!";
 
 	public static void main(String[] args) {
 		if (args.length != 4) { // Check that we get 4 arguments in
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
 		}
-		
+
 		//Can be used to define custom message length, for testing different message sizes and layer 3 fragmentation
 		/*
 		MSG = "";
@@ -198,10 +198,10 @@ public class UDPEchoClient {
 					failures++;
 				}
 			}
-			while (!doNotLoop && System.currentTimeMillis() < end && packetsShipped+failures < sendRate);
+			while (!doNotLoop && System.currentTimeMillis() < end && packetsShipped + failures < sendRate);
 
 			// Waits out the remaining time, if any.
-			while(System.currentTimeMillis() < end) {
+			while (System.currentTimeMillis() < end) {
 				try {
 					// Improves performance of program so it doesn't soak up 100% core util when waiting.
 					Thread.sleep(0, 500);

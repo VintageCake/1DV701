@@ -1,10 +1,9 @@
 package assign1;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
 import assign1.abstractions.TCPClientSocket;
 import assign1.abstractions.TCPServerSocket;
+
+import java.io.IOException;
 
 public class TCPEchoServer {
 	// Port which we should listen to

@@ -1,10 +1,10 @@
 package assign1;
 
+import assign1.abstractions.TCPClientSocket;
+
 import java.io.IOException;
 import java.net.PortUnreachableException;
 import java.net.SocketException;
-
-import assign1.abstractions.TCPClientSocket;
 
 public class TCPThread implements Runnable {
 	TCPClientSocket sock;
