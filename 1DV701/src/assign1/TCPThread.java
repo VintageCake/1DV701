@@ -29,6 +29,8 @@ public class TCPThread implements Runnable {
 				// Sets up the 'backend' InputStream and OutputStream
 				sock.setupIO();
 
+				// sock.getSocket().setTcpNoDelay(true); // Inefficient terrible command! Disables Nagle's algorithm.
+
 				/*
 				While the socket is open, loop through these conditions.
 				When data has appeared in the buffer, TCPClientSocket.read() will return an integer corresponding

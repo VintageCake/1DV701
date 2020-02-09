@@ -18,6 +18,7 @@ public class TCPEchoServer {
 			System.exit(1);
 		}
 
+		// verifies buffer size type and sanity
 		int bufSize = 0;
 		try {
 			bufSize = verifyBuffer(args[0]);
@@ -43,7 +44,7 @@ public class TCPEchoServer {
 		try {
 			while (true) {
 				// welcome.accept() is blocking, waits until new connection is opened.
-				// Tosses the newly created socket into a new thread, multithreads the connections.
+				// Tosses the newly created socket into a new thread, multithreads the connections, passing connections into a TCPThread.
 				Thread t = new Thread(new TCPThread(new TCPClientSocket(welcome.accept()), bufSize, TIMEOUT_MS));
 				t.start();
 			}

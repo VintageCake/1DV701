@@ -48,7 +48,7 @@ public class UDPEchoServer {
 			System.exit(1);
 		}
 
-		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
+		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: (" + serverSocket.getSource().getPort() + ") with buffer size: (" + buf.length + ")");
 
 		// Main server loop
 		@SuppressWarnings("unused") int counter = 0;
