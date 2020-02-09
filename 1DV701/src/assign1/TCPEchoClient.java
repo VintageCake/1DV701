@@ -64,6 +64,10 @@ public class TCPEchoClient {
 			Scanner s = new Scanner(System.in);
 			System.err.println("Do you want to continue? (y/n)");
 
+			// Following block of code is a switch block that handles user input after prompt.
+			// Repeats if user input is anything other than "y" or "n".
+			// Continues program execution by breaking out if input is "y"
+			// Terminates program if input is "n"
 			String decision = "";
 			boolean repeat;
 			do {
@@ -154,6 +158,7 @@ public class TCPEchoClient {
 				}
 			}
 
+			// Last pass of messages before next pass of messages, or before program termination.
 			System.out.println("[Echoed " + messagesShipped + " out of " + sendRate + " messages ------ " + "Malformed messages or timeouts: " + failures + "]");
 			if (restFailed) {
 				System.out.println("[Remaining packets failed to be sent due to error]");

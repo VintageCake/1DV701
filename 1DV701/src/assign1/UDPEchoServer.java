@@ -17,6 +17,7 @@ import java.net.SocketException;
 import assign1.abstractions.UDPServerSocket;
 
 public class UDPEchoServer {
+	// Listening port
 	public static final int MYPORT = 4950;
 
 	public static void main(String[] args) {
@@ -24,9 +25,8 @@ public class UDPEchoServer {
 			System.err.println("Need to define buffer size as argument!");
 			System.exit(1);
 		}
-		// TODO - Look over comments
 
-		// Buffer creation and input validation
+		// Buffer creation and input validation, 'wrong' or out of range input throws exception.
 		byte[] buf = null;
 		try {
 			int testBuffer = verifyBuffer(args[0]);
@@ -37,11 +37,12 @@ public class UDPEchoServer {
 			System.exit(1);
 		}
 
-		/* Create socket */
+		// Creates the socket using my abstraction layer, catching errors and terminating if something goes wrong.
 		UDPServerSocket serverSocket = null;
 		try {
 			serverSocket = new UDPServerSocket(MYPORT);
 		}
+		// really only throws when the port is already in use by another program
 		catch (SocketException e) {
 			System.err.println("Socket creation error: " + e.getMessage());
 			System.exit(1);
@@ -49,28 +50,29 @@ public class UDPEchoServer {
 
 		System.out.println(java.time.LocalDateTime.now() + " Server started... listening on port: " + MYPORT);
 
-		// If the received message is larger than the buffer, the message is cut off and only a substring with equal length to the buffer is echoed back.
 		// Main server loop
 		@SuppressWarnings("unused") int counter = 0;
 		while (true) {
 			try {
-				/* Create datagram packet for receiving message */
+				// Create datagram packet for receiving message
 				DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
-				/* Receiving message */
+				// Receiving message
+				// If the received message is larger than the buffer, the message is cut off and only a substring with equal length to the buffer is echoed back.
 				serverSocket.receive(receivePacket);
 
 				/* Create datagram packet for sending message */
 				DatagramPacket sendPacket = new DatagramPacket(receivePacket.getData(), receivePacket.getLength(),
 						receivePacket.getAddress(), receivePacket.getPort());
 
-				/* Send message */
+				// Transmits message back
 				serverSocket.send(sendPacket);
 
 				// Debug messages really only kill performance, not needed for every packet received.
 				//System.out.printf(java.time.LocalTime.now() + " " + counter++ + " UDP echo request from %s", receivePacket.getAddress().getHostAddress());
 				//System.out.printf(" using port %d%n", receivePacket.getPort());
 			}
+			// Any weird super weird issue will issue an informational message to the console and then terminate the program.
 			catch (IOException e) {
 				System.err.println(java.time.LocalTime.now() + " Error: " + e.getMessage());
 				System.exit(1);

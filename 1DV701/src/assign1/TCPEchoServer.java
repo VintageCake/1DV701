@@ -7,6 +7,7 @@ import assign1.abstractions.TCPClientSocket;
 import assign1.abstractions.TCPServerSocket;
 
 public class TCPEchoServer {
+	// Port which we should listen to
 	private static final int MYPORT = 4950;
 	// Timeout set for dead connections are 90s.
 	private static final int TIMEOUT_MS = 90000;

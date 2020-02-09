@@ -30,7 +30,6 @@ public class UDPEchoClient {
 			System.err.println("Usage: Destination address, Port, BufferSize (in bytes), sendrate");
 			System.exit(1);
 		}
-		// TODO - Look over comments
 		
 		//Can be used to define custom message length, for testing different message sizes and layer 3 fragmentation
 		/*
@@ -62,22 +61,29 @@ public class UDPEchoClient {
 				}
 			}
 
+			// Parses the port number, throws if not an int
 			portNumber = Integer.parseInt(args[1]);
+			// Checks to see if port is inside valid range, throws a NumberFormatException if out of range.
 			if (portNumber < 0 || portNumber > ((int) (Math.pow(2, 16)) - 1)) {
 				throw new NumberFormatException("Invalid port range, range has to be integer 0-65535");
 			}
 
+			// Parses the buffer size, throws if not an int
 			int testBuffer = Integer.parseInt(args[2]);
+			// Checks to see if buffer is within a valid range, throws exception if not.
 			if (testBuffer < 1 || testBuffer > 100000) {
 				throw new NumberFormatException("Invalid buffer size, please use range between 1-100,000");
 			}
+			// Creates the byte buffer used for receiving data.
 			buf = new byte[testBuffer];
 
+			// Checks if send rate is an int, throws exception if not. Throws exception if send rate is not within range.
 			sendRate = Integer.parseInt(args[3]);
 			if (sendRate < 0 || sendRate > 50000) {
 				throw new NumberFormatException("Send rate out of range, use 0-50,000");
 			}
 		}
+		// If any argument is not within expected parameters, tell user why and terminate the program.
 		catch (NumberFormatException e) {
 			System.err.println("Invalid argument found:");
 			System.err.println(e.getMessage());
@@ -93,12 +99,18 @@ public class UDPEchoClient {
 			sendRate = 1;
 			doNotLoop = true;
 		}
+
+		// This if-block takes care of the case where the message size is larger than the receive buffer, which means the program is destined to fail.
 		if (buf.length < MSG.getBytes().length) {
 			System.err.println("Receive buffer length: (" + buf.length + ") is smaller than total message length: (" + MSG.getBytes().length + ")");
 			System.err.println("Message received from server will only be a substring of total message, message comparison will always return fail!");
 			Scanner s = new Scanner(System.in);
 			System.err.println("Do you want to continue? (y/n)");
 
+			// Following block of code is a switch block that handles user input after prompt.
+			// Repeats if user input is anything other than "y" or "n".
+			// Continues program execution by breaking out if input is "y"
+			// Terminates program if input is "n"
 			String decision = "";
 			boolean repeat;
 			do {
@@ -120,12 +132,12 @@ public class UDPEchoClient {
 			} while (repeat);
 		}
 
-		/* Create socket */
+		// Creates the socket with my abstraction layer
 		UDPClientSocket clientSocket = null;
 		try {
 			// Uses the new abstract implementation, (IP, DESTINATION PORT, SOURCE PORT)
 			clientSocket = new UDPClientSocket(args[0], portNumber, MYPORT);
-			clientSocket.setTimeout(TIMEOUT_MS); // Set max wait for a .receive().
+			clientSocket.setTimeout(TIMEOUT_MS); // Set max wait for a .receive() until packet is considered a loss.
 		}
 		// Basically only throws an exception when the port was already in use.
 		catch (SocketException e) {
@@ -133,10 +145,10 @@ public class UDPEchoClient {
 			System.exit(1);
 		}
 
-		/* Create datagram packet for sending message */
+		// Create datagram packet for sending message
 		DatagramPacket sendPacket = new DatagramPacket(MSG.getBytes(), MSG.length(), clientSocket.getDestination());
 
-		/* Create datagram packet for receiving echoed message */
+		// Creates datagram packet for the receive portion of the program.
 		DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
 
 		// Main loop
@@ -148,7 +160,7 @@ public class UDPEchoClient {
 			do {
 				try {
 					clientSocket.send(sendPacket);
-					clientSocket.receive(receivePacket);
+					clientSocket.receive(receivePacket); // Blocks until packet has come in, or until timeout is hit
 				}
 				// Port Unreachable seems to not really work even though my socket is 'connected', unfortunately.
 				catch (PortUnreachableException e) {
@@ -166,6 +178,7 @@ public class UDPEchoClient {
 				catch (SocketTimeoutException e) {
 					failures++;
 				}
+				// General issue
 				catch (IOException e) {
 					System.err.println("General error: " + e.getMessage());
 					System.exit(1);
@@ -175,7 +188,7 @@ public class UDPEchoClient {
 				String receivedString = new String(receivePacket.getData(), receivePacket.getOffset(),
 						receivePacket.getLength());
 
-				// Console messages removed to improve performance, refer to 2.2.1 in the report.
+				// Console messages removed to improve performance, uncomment to get debug output.
 				if (receivedString.compareTo(MSG) == 0) {
 					//System.out.printf("%d bytes sent and received%n", receivePacket.getLength());
 					packetsShipped++;
@@ -201,7 +214,7 @@ public class UDPEchoClient {
 				}
 			}
 
-
+			// Print last informational before next pass of packets are to be sent, or before program termination.
 			System.out.println("[Echoed " + packetsShipped + " out of " + sendRate + " packets ------ " + "Malformed packets or timeouts: " + failures + "]");
 
 		}
