@@ -1,7 +1,7 @@
 package assign1;
 /*
   UDPEchoServer.java
-  Author: Love Samulesson ls223qx@student.lnu.se
+  Author: Love Samuelsson ls223qx@student.lnu.se
   Date: 2020-02-01
   
   A UDP server that sends back whatever is received by using the socket api.

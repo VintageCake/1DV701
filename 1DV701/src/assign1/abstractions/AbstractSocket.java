@@ -1,7 +1,7 @@
 package assign1.abstractions;
 /*
   AbstractSocket.java
-  Author: Love Samulesson ls223qx@student.lnu.se
+  Author: Love Samuelsson ls223qx@student.lnu.se
   Date: 2020-01-31
   
   An abstract class that provides some useful variables and methods that are used in both TCP and UDP sockets.

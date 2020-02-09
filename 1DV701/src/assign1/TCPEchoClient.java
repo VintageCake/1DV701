@@ -1,5 +1,13 @@
 package assign1;
+/*
+  TCPEchoClient.java
+  Author: Love Samuelsson ls223qx@student.lnu.se
+  Date: 2020-02-01
 
+  TCP client that initiates a connection with a TCP echo server, sends data and validates it.
+  Prints informational messages at the end of every second, tries to send as many packets as configured by the send rate argument.
+
+*/
 import assign1.abstractions.TCPClientSocket;
 
 import java.io.IOException;

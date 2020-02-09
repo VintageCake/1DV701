@@ -1,5 +1,12 @@
 package assign1.abstractions;
+/*
+  TCPClientSocket.java
+  Author: Love Samuelsson ls223qx@student.lnu.se
+  Date: 2020-02-07
 
+  An extension of the abstract socket that provides an implementation of a TCP client socket.
+
+*/
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

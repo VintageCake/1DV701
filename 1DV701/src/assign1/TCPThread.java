@@ -1,5 +1,13 @@
 package assign1;
+/*
+  TCPThread.java
+  Author: Love Samulesson ls223qx@student.lnu.se
+  Date: 2020-02-07
 
+  A class that is intended to be run as a thread.
+  Handles a single TCP connection and echoes back whatever comes into the input stream.
+
+*/
 import assign1.abstractions.TCPClientSocket;
 
 import java.io.IOException;

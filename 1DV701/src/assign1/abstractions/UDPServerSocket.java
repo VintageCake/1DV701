@@ -1,7 +1,7 @@
 package assign1.abstractions;
 /*
   UDPServerSocket.java
-  Author: Love Samulesson ls223qx@student.lnu.se
+  Author: Love Samuelsson ls223qx@student.lnu.se
   Date: 2020-01-31
   
   An extension of the abstract socket that provides an implementation of a UDP server socket.

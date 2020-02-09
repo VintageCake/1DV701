@@ -1,12 +1,10 @@
 
-ksquid:S3008"NRename this field "MSG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÀĞ¹88êª°‚.
-wsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÃÈÂÍıÿÿÿÿ
 isquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 46 to the 15 allowed.(Çµí‘
-Osquid:S1135!"2Complete the task associated to this TODO comment.(¶ş8à‰ë¹‚.
+ƒ"squid:ClassVariableVisibilityCheck"OMake MSG a static final constant or non-public and provide accessors if needed.(ÀĞ¹88ß£§°‚.
+ksquid:S3008"NRename this field "MSG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÀĞ¹88êª°‚.
 i
-squid:S128p"LEnd this switch case with an unconditional break, return or throw statement.(»è˜Ô8Ø—»°‚.
-Fsquid:S1444")Make this "public static MSG" field final(ÀĞ¹88êª°‚.
-isquid:CommentedOutCodeLine%"<This block of commented-out lines of code should be removed.(‚Ï¬Ÿ8¢ûº°‚.
-jsquid:CommentedOutCodeLine´"<This block of commented-out lines of code should be removed.(¬ãÓ”8ª€ñ­‚.
-jsquid:CommentedOutCodeLine¸"<This block of commented-out lines of code should be removed.(“ÄÌõ8ª€ñ­‚.
-ƒ"squid:ClassVariableVisibilityCheck"OMake MSG a static final constant or non-public and provide accessors if needed.(ÀĞ¹88ß£§°‚.
+squid:S128|"LEnd this switch case with an unconditional break, return or throw statement.(»è˜Ô8Ø—»°‚.
+isquid:CommentedOutCodeLine$"<This block of commented-out lines of code should be removed.(‚Ï¬Ÿ8¢ûº°‚.
+jsquid:CommentedOutCodeLineÁ"<This block of commented-out lines of code should be removed.(¬ãÓ”8ª€ñ­‚.
+Fsquid:S1444")Make this "public static MSG" field final(ÀĞ¹88êª°‚.
+jsquid:CommentedOutCodeLineÅ"<This block of commented-out lines of code should be removed.(“ÄÌõ8ª€ñ­‚.

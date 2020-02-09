@@ -1,5 +1,13 @@
 package assign1;
+/*
+  TCPEchoServer.java
+  Author: Love Samuelsson ls223qx@student.lnu.se
+  Date: 2020-02-01
 
+  A TCP echo server that accepts clients using a server socket, and then handing off that connection to a new thread.
+  This approach allows multiple clients with multithreading.
+
+*/
 import assign1.abstractions.TCPClientSocket;
 import assign1.abstractions.TCPServerSocket;
 
